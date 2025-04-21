@@ -41,6 +41,69 @@ The core of this project is a linear programming (LP) model that maximizes the i
    - Withdrawal rate limitations (linear dependency on storage fill level)
    - Non-negativity constraints
 
+### Optimization Model: Linear Programming
+
+The core of this project is a linear programming (LP) model that maximizes the intrinsic value of the storage asset. The intrinsic value represents the profit potential from a static, deterministic strategy based on current forward prices.
+
+#### Key Components of the LP Model:
+
+1. **Decision Variables**:
+   - Daily injection volumes: `inject[t]` for each day t
+   - Daily withdrawal volumes: `withdraw[t]` for each day t
+   - Storage inventory levels: `storage[t]` for each day t
+   - Binary variables: `is_first_half[t]` for injection regime switching
+
+2. **Objective Function**:
+   - Maximize: Revenue from gas sales - Cost of gas purchases - Variable operational costs
+   ```python
+   revenue = pulp.lpSum(withdraw[t] * prices[t] for t in range(T))
+   cost = pulp.lpSum(inject[t] * prices[t] * (1 + variable_cost_rate) for t in range(T))
+   prob += revenue - cost, "Total_Profit"
+   ```
+
+3. **Constraints**:
+   - Storage balance equations (continuity constraints)
+   - Maximum and minimum storage levels
+   - Injection rate limitations (dependent on storage fill level)
+   - Withdrawal rate limitations (linear dependency on storage fill level)
+   - Non-negativity constraints
+
+#### PuLP Implementation Details
+
+The model uses PuLP, a Python library for linear programming, to formulate and solve the optimization problem. Here are the key implementation details:
+
+1. **Big-M Method**:
+   The model uses the Big-M method to handle the discrete change in injection capacity when storage crosses the 50% threshold:
+   ```python
+   M = wgv * 2  # Big-M constant
+   # If storage[t-1] < threshold * wgv, is_first_half[t] = 1
+   prob += storage[t-1] - injection_threshold * wgv <= M * (1 - is_first_half[t])
+   prob += storage[t-1] - injection_threshold * wgv >= -M * is_first_half[t]
+   ```
+   This mathematical technique converts logical conditions into linear constraints using a large constant (M) and binary variables.
+
+2. **Binary Variables**:
+   The model uses binary variables (`is_first_half[t]`) to model the discrete change in injection rates:
+   ```python
+   is_first_half = [pulp.LpVariable(f"is_first_half_{t}", cat='Binary') for t in range(T)]
+   ```
+   When `is_first_half[t] = 1`, storage is less than 50% full, allowing 100% of maximum injection rate.
+   When `is_first_half[t] = 0`, storage is at least 50% full, restricting injection to 70% of maximum rate.
+
+3. **Solving Algorithm**:
+   PuLP uses the Coin-OR Branch and Cut (CBC) solver, which employs:
+   - Simplex algorithm for solving the linear relaxation 
+   - Branch and Bound technique for handling integer/binary variables
+   - Cutting plane methods to improve convergence
+   
+   The solver finds the optimal solution by:
+   1. Solving the relaxed LP problem (ignoring binary constraints)
+   2. Using branch and bound to enforce integer/binary constraints
+   3. Adding cutting planes to tighten the feasible region
+   4. Iteratively improving the solution until optimality is proven
+
+This sophisticated mathematical approach enables the model to properly account for the complex operational constraints of gas storage while determining the profit-maximizing strategy.
+
 #### Injection/Withdrawal Curves Modeling
 
 The model incorporates realistic operational constraints:
