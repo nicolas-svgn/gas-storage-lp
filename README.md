@@ -306,10 +306,11 @@ Contributions to improve the project are welcome. Please follow these steps:
 
 ## Acknowledgments
 
+- ČEZ Group for providing the forward curve data
 - PuLP library for linear programming functionality
 - Pandas for data handling
 - Matplotlib for visualization
 
 ## Contact
 
-For questions or support, please contact your-email@example.com
+For questions or support, please contact media.svd@outlook.fr
