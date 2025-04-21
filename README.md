@@ -257,17 +257,18 @@ The visualization includes:
 ### Key Performance Metrics
 
 - **Bidding Strategy**:
-  - Intrinsic Value: €X.XX per MWh
-  - Recommended Bid: €X.XX per MWh (80% of intrinsic value)
-  - Total Bid Amount: €X,XXX,XXX
+  - Intrinsic Value: 807624.64 € (0.808 €/MWh)
+  - Recommended Bid: 646099.72 € (0.646 €/MWh) (80% of intrinsic value)
+  - Expected Profit: 161524.93 € (0.162 €/MWh)
+
 
 - **Operational Summary**:
-  - Total Gas Injected: X,XXX,XXX MWh
-  - Total Gas Withdrawn: X,XXX,XXX MWh
-  - Maximum Storage Utilization: XX.X%
-  - Injection Days: XX
-  - Withdrawal Days: XX
-  - Hold Days: XX
+  - Total Gas Injected: 1,000,000 MWh
+  - Total Gas Withdrawn: 1,000,000 MWh
+  - Maximum Storage Utilization: 100%
+  - Injection Days: 61
+  - Withdrawal Days: 51
+  - Hold Days: 253
 
 ## Advanced Usage
 
