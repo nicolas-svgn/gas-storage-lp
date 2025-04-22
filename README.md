@@ -26,35 +26,13 @@ The core of this project is a linear programming (LP) model that maximizes the i
 #### Key Components of the LP Model:
 
 1. **Decision Variables**:
-   - Daily injection volumes
-   - Daily withdrawal volumes 
-   - Storage inventory levels
-   - Binary variables for injection regime switching
-
-2. **Objective Function**:
-   - Maximize: Revenue from gas sales - Cost of gas purchases - Variable operational costs
-
-3. **Constraints**:
-   - Storage balance equations (continuity constraints)
-   - Maximum and minimum storage levels
-   - Injection rate limitations (dependent on storage fill level)
-   - Withdrawal rate limitations (linear dependency on storage fill level)
-   - Non-negativity constraints
-
-### Optimization Model: Linear Programming
-
-The core of this project is a linear programming (LP) model that maximizes the intrinsic value of the storage asset. The intrinsic value represents the profit potential from a static, deterministic strategy based on current forward prices.
-
-#### Key Components of the LP Model:
-
-1. **Decision Variables**:
    - Daily injection volumes: `inject[t]` for each day t
    - Daily withdrawal volumes: `withdraw[t]` for each day t
    - Storage inventory levels: `storage[t]` for each day t
    - Binary variables: `is_first_half[t]` for injection regime switching
 
 2. **Objective Function**:
-   - Maximize: Revenue from gas sales - Cost of gas purchases - Variable operational costs
+   - Maximize: Revenue from gas sales - Cost of gas purchases 
    ```python
    revenue = pulp.lpSum(withdraw[t] * prices[t] for t in range(T))
    cost = pulp.lpSum(inject[t] * prices[t] * (1 + variable_cost_rate) for t in range(T))
@@ -186,7 +164,7 @@ gas-storage-lp/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/gas-storage-lp.git
+   git clone https://github.com/nicolas-svgn/gas-storage-lp.git
    cd gas-storage-lp
    ```
 
@@ -233,14 +211,13 @@ The program generates:
 1. A bidding strategy with:
    - Recommended bid per MWh and total bid
    - Expected profit calculation
-   - Intrinsic value analysis
 
 2. Detailed operational plan with daily:
    - Injection volumes
    - Withdrawal volumes
    - Storage inventory levels
 
-3. Visualizations in the `results/` directory
+3. Visualizations and plan in the `results/` directory
 
 ## Example Results
 
@@ -271,17 +248,6 @@ The visualization includes:
   - Hold Days: 253
 
 ## Advanced Usage
-
-### Sensitivity Analysis
-
-You can perform sensitivity analysis by modifying key parameters and observing the impact on profitability:
-
-```python
-# Example: Testing different bid fractions
-for bid_fraction in [0.7, 0.75, 0.8, 0.85, 0.9]:
-    result = calculate_bid_and_plan(optimization_result, bid_fraction=bid_fraction)
-    print(f"Bid Fraction: {bid_fraction}, Expected Profit: {result['expected_profit']}")
-```
 
 ### Using Different Forward Curves
 
