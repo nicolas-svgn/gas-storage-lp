@@ -247,15 +247,46 @@ The visualization includes:
   - Withdrawal Days: 51
   - Hold Days: 253
 
-## Advanced Usage
+## Conclusion and Limitations
 
-### Using Different Forward Curves
+### Model Performance
 
-To use an alternative forward curve:
+The implemented gas storage optimization model performs well for the given assignment, producing reasonable and economically sound results:
 
-1. Prepare a CSV file with columns 'date' and 'price'
-2. Ensure dates cover the full storage period (April 1, 2026 to March 31, 2027)
-3. Update the filepath in `main.py`
+- **Economic Performance**:
+  - Intrinsic Value: 0.808 €/MWh
+  - Recommended Bid: 0.646 €/MWh (80% of intrinsic value)
+  - Expected Profit: 0.162 €/MWh after paying the storage fee
+
+- **Operational Efficiency**:
+  - Complete utilization of storage capacity (100% maximum utilization)
+  - Balanced injection (61 days) and withdrawal (51 days) activity
+  - Selective trading on the most profitable days (253 hold days)
+
+The model successfully captures the available value from the forward curve while respecting all operational constraints of the storage facility.
+
+### Key Limitations
+
+While effective for this specific case, it's important to recognize the model's limitations:
+
+1. **Deterministic Framework**:
+   - The model assumes a single, fixed forward curve
+   - It cannot adapt to changing market conditions or price updates
+   - Results are optimal only for the exact forward curve provided
+
+2. **No Stochastic Modeling**:
+   - Real gas markets exhibit significant price volatility and uncertainty
+   - This model does not capture extrinsic value from price volatility
+   - Stochastic models with multiple price scenarios would be needed to fully value the optionality of storage
+
+3. **Forward Curve Specificity**:
+   - Results will not generalize to other forward curves without re-running the optimization
+   - The bidding strategy is specific to the current market outlook
+   - Different seasonal patterns or volatility would yield significantly different results
+
+4. **No Market Feedback Effects**:
+   - The model assumes storage operations don't influence market prices
+   - In reality, large storage operators can have market impact
 
 ## Contributing
 
